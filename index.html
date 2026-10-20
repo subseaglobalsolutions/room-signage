@@ -69,6 +69,7 @@
     font-family: "Courier New", Courier, monospace; font-weight: bold; font-size: 40px; letter-spacing: 1px;
     color: var(--navy); background: var(--hi); border-radius: 10px; padding: 4px 16px;
   }
+  .oneline { white-space: nowrap; }
   .dots { position: absolute; left: 990px; width: 860px; top: 0; display: flex; justify-content: center; gap: 14px; }
   .dots i { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: background 0.6s; }
   .dots i.on { background: #fff; }
@@ -91,10 +92,10 @@
       title: "Join with Room audio",
       steps: [
         "Open the meeting in Teams and select <b>Join</b>.",
-        "Choose <b>Room audio</b> and pick <b>SGS Global Conference Room &ndash; Forward</b>.",
+        "Choose <b>Room audio</b> and pick<br><b class=\"oneline\">SGS Global Conference Room &ndash; Forward</b>",
         "Select <b>Join now</b>."
       ],
-      note: "The room handles sound and video, and your laptop stays muted.&nbsp; <b>Please don&rsquo;t choose Computer audio here; it causes echo.</b>"
+      note: "The room handles sound and video, and your laptop stays muted.&nbsp; <b>Please don&rsquo;t choose Computer audio here; it will cause an echo.</b>"
     },
     {
       kicker: "Teams meeting &middot; on this screen",
@@ -115,7 +116,7 @@
         "No meeting running?&nbsp; Your screen appears here.",
         "Meeting in progress?&nbsp; Everyone in the meeting sees your screen straight away."
       ],
-      note: "No HDMI port?&nbsp; Use the USB-C adapter on the cable.&nbsp; <b>Please leave it attached when you&rsquo;re done.</b>"
+      note: "No HDMI port?&nbsp; Use the USB-C adapter on the cable.<br><b>Please leave it attached when you&rsquo;re done.</b>"
     },
     {
       kicker: "Visitors &middot; Wi-Fi",
@@ -124,7 +125,7 @@
         "Connect to the network<br><span class=\"cred\">subseaglobalsolutions_Guest</span>",
         "On the sign-in page, enter the guest password.&nbsp; <b>Please ask your host for it.</b>"
       ],
-      note: "No sign-in page?&nbsp; Open your web browser and it should appear."
+      note: "No sign-in page?<br>Open your web browser and it should appear."
     }
   ];
   // ---------------------------------------------------------------------------
