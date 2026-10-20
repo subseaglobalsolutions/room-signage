@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conference Room Signage</title>
+<style>
+  :root {
+    --navy: #0f2a4a;
+    --teal: #0f7c80;
+    --glass: rgba(12, 32, 56, 0.74);
+    --edge: rgba(255, 255, 255, 0.22);
+    --hi: #ffe27a;
+  }
+  html, body { margin: 0; height: 100%; background: #0b1f33; overflow: hidden; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #fff; }
+
+  /* Fixed 1920x1080 stage, scaled to whatever screen it lands on */
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1920px; height: 1080px;
+    transform-origin: 0 0;
+    overflow: hidden;
+  }
+  .bg {
+    position: absolute; inset: -40px;
+    background: url("For_Teams_Slideshow.jpg") center / cover no-repeat;
+    animation: drift 90s ease-in-out infinite alternate;
+  }
+  /* Slow drift so no pixel holds the same image for long */
+  @keyframes drift {
+    0%   { transform: scale(1.00) translate(0, 0); }
+    50%  { transform: scale(1.04) translate(-18px, 10px); }
+    100% { transform: scale(1.02) translate(16px, -12px); }
+  }
+
+  /* Message panel: right-hand sky, clear of the top 15% Teams banner */
+  .slide {
+    position: absolute; left: 990px; top: 230px; width: 860px;
+    background: var(--glass);
+    border: 2px solid var(--edge); border-radius: 22px;
+    padding: 44px 52px 40px;
+    box-sizing: border-box;
+    opacity: 0; transition: opacity 1.4s ease, transform 1.4s ease;
+    backdrop-filter: blur(6px);
+  }
+  .slide.on { opacity: 1; }
+  .kicker {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 24px; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; color: #9fe0e2;
+  }
+  .tag { font-size: 20px; letter-spacing: 1px; color: #fff; background: var(--teal); border-radius: 20px; padding: 5px 16px; }
+  h1 { margin: 14px 0 30px; font-size: 60px; line-height: 1.08; }
+  ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 18px; }
+  li { counter-increment: s; position: relative; padding-left: 66px; font-size: 36px; line-height: 1.28; }
+  li::before {
+    content: counter(s); position: absolute; left: 0; top: 0;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: #fff; color: var(--navy); font-size: 26px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+  }
+  li b, .note b { color: var(--hi); }
+  .note {
+    margin-top: 32px; padding-top: 24px; border-top: 2px solid var(--edge);
+    font-size: 28px; line-height: 1.35; color: #dbe6f0;
+  }
+  .cred {
+    display: inline-block; margin-top: 8px;
+    font-family: "Courier New", Courier, monospace; font-weight: bold; font-size: 40px; letter-spacing: 1px;
+    color: var(--navy); background: var(--hi); border-radius: 10px; padding: 4px 16px;
+  }
+  .dots { position: absolute; left: 990px; width: 860px; top: 0; display: flex; justify-content: center; gap: 14px; }
+  .dots i { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: background 0.6s; }
+  .dots i.on { background: #fff; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="bg"></div>
+  <div id="slides"></div>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  // ---- Edit the slides here.  Each one fades in, holds, then fades out. ----
+  // Use &nbsp; before the second space after a sentence so it isn't collapsed.
+  const HOLD_SECONDS = 15;
+  const SLIDES = [
+    {
+      kicker: "Teams meeting &middot; laptop", tag: "Easiest",
+      title: "Join with Room audio",
+      steps: [
+        "Open the meeting in Teams and select <b>Join</b>.",
+        "Choose <b>Room audio</b> and pick <b>SGS Global Conference Room &ndash; Forward</b>.",
+        "Select <b>Join now</b>."
+      ],
+      note: "The room handles sound and video, and your laptop stays muted.&nbsp; <b>Please don&rsquo;t choose Computer audio here; it causes echo.</b>"
+    },
+    {
+      kicker: "Teams meeting &middot; on this screen",
+      title: "Join with the meeting ID",
+      steps: [
+        "Use the keyboard and mouse on the table.",
+        "Select <b>Join with an ID</b>.",
+        "Type the <b>Meeting ID</b> and <b>Passcode</b> from your invite.",
+        "Select <b>Join</b>."
+      ],
+      note: "<b>Works for any Teams meeting,</b> including one hosted by a client or another company.&nbsp; No laptop needed."
+    },
+    {
+      kicker: "Laptop &middot; Windows or Mac",
+      title: "Plug in with HDMI",
+      steps: [
+        "Plug the <b>HDMI cable</b> on the table into your laptop.",
+        "No meeting running?&nbsp; Your screen appears here.",
+        "Meeting in progress?&nbsp; Everyone in the meeting sees your screen straight away."
+      ],
+      note: "No HDMI port?&nbsp; Use the USB-C adapter on the cable.&nbsp; <b>Please leave it attached when you&rsquo;re done.</b>"
+    },
+    {
+      kicker: "Visitors &middot; Wi-Fi",
+      title: "Guest Wi-Fi",
+      steps: [
+        "Connect to the network<br><span class=\"cred\">subseaglobalsolutions_Guest</span>",
+        "On the sign-in page, enter the guest password.&nbsp; <b>Please ask your host for it.</b>"
+      ],
+      note: "No sign-in page?&nbsp; Open your web browser and it should appear."
+    }
+  ];
+  // ---------------------------------------------------------------------------
+
+  const stage = document.getElementById("stage");
+  function fit() {
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    stage.style.transform = `scale(${s}) translate(-50%, -50%)`;
+  }
+  addEventListener("resize", fit); fit();
+
+  const host = document.getElementById("slides"), dotHost = document.getElementById("dots");
+  const els = SLIDES.map(s => {
+    const d = document.createElement("div");
+    d.className = "slide";
+    d.innerHTML =
+      `<div class="kicker">${s.kicker}${s.tag ? `<span class="tag">${s.tag}</span>` : ""}</div>` +
+      `<h1>${s.title}</h1>` +
+      `<ol>${s.steps.map(t => `<li>${t}</li>`).join("")}</ol>` +
+      (s.note ? `<div class="note">${s.note}</div>` : "");
+    host.appendChild(d);
+    dotHost.appendChild(document.createElement("i"));
+    return d;
+  });
+  const dots = [...dotHost.children];
+
+  // Nudge each appearance a little so text never sits in exactly the same place
+  function show(i) {
+    els.forEach((e, n) => e.classList.toggle("on", n === i));
+    dots.forEach((e, n) => e.classList.toggle("on", n === i));
+    const dx = Math.round((Math.random() - 0.5) * 60), dy = Math.round((Math.random() - 0.5) * 50);
+    els[i].style.transform = `translate(${dx}px, ${dy}px)`;
+    const r = els[i].getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    const scale = sr.width / 1920;
+    dotHost.style.top = ((r.bottom - sr.top) / scale + 22) + "px";
+  }
+
+  // ?slide=2 freezes on one slide for review
+  const pinned = parseInt(new URLSearchParams(location.search).get("slide"), 10);
+  if (pinned >= 1 && pinned <= els.length) {
+    show(pinned - 1);
+  } else {
+    let i = 0; show(0);
+    setInterval(() => { i = (i + 1) % els.length; show(i); }, HOLD_SECONDS * 1000);
+  }
+</script>
+</body>
+</html>
